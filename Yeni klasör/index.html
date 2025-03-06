@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futbol Maçları</title>
+</head>
+<body>
+    <h1>Futbol Maçları</h1>
+    <button onclick="fetchMatches()">Maçları Getir</button>
+    <ul id="matchList"></ul>
+
+    <script>
+        async function fetchMatches() {
+            const apiUrl = 'https://api.football-data.org/v2/competitions/PL/matches'; // Örnek: Premier Lig
+            const apiKey = 'YOUR_API_KEY'; // Buraya kendi API anahtarınızı ekleyin
+            
+            try {
+                let response = await fetch(apiUrl, {
+                    headers: { "X-Auth-Token": apiKey }
+                });
+                let data = await response.json();
+                
+                let matchList = document.getElementById("matchList");
+                matchList.innerHTML = "";
+                
+                data.matches.forEach(match => {
+                    let listItem = document.createElement("li");
+                    listItem.textContent = `${match.homeTeam.name} vs ${match.awayTeam.name} - Skor: ${match.score.fullTime.home} - ${match.score.fullTime.away}`;
+                    matchList.appendChild(listItem);
+                });
+            } catch (error) {
+                console.error("Veri çekme hatası:", error);
+            }
+        }
+    </script>
+</body>
+</html>
